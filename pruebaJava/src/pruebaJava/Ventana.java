@@ -2,6 +2,7 @@ package pruebaJava;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +24,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -76,8 +79,9 @@ public class Ventana extends JFrame implements ActionListener, MouseListener{
 	JTextArea  taNeto = new JTextArea();
 	JPopupMenu popMenu = new  JPopupMenu();
 	
-	TranslucentPopupMenu n= new TranslucentPopupMenu();
-	JMenuItem iAbrir = new JMenuItem();
+	//TranslucentPopupMenu n= new TranslucentPopupMenu();
+	
+	
 	public Ventana() {
 		initGui();
 		
@@ -92,15 +96,39 @@ public class Ventana extends JFrame implements ActionListener, MouseListener{
 		setLocationRelativeTo(null);
 		setUndecorated(true);
 		setResizable(false);
-		///////////////////////////////////////Menu
+		///////////////////////////////////////Menu y submenus
 		//pMenu.setBackground(new Color(60,60,60));
-		popMenu.add("Name");
-		popMenu.addSeparator();
-		popMenu.add("Id");
-		popMenu.addSeparator();
-		popMenu.setBackground(new Color(0,0,0,50));
-		popMenu.setForeground(new Color(0,0,0,50));
-		popMenu.add(new JButton("botn"));
+		popMenu.setOpaque(true);
+		popMenu.setPopupSize(200, 400);
+		popMenu.setBackground(new Color(0,0,0,100));
+		UIManager.put("MenuItem.selectionBackground", Color.BLACK);
+		popMenu.setLayout(null);
+		//UIManager.put("PopupMenu.background", new Color(0));
+		UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
+		JMenuItem iConfig = new JMenuItem("Configuración");
+		iConfig.setName("IConfig");
+		JMenuItem iSalir = new JMenuItem("Salir");
+		iSalir.setName("iSalir");
+		
+		iConfig.setMaximumSize(new Dimension(400,70));
+		iConfig.setBackground(new Color(0,0,0,100));
+		iConfig.setBorder(BorderFactory.createEmptyBorder());
+		iConfig.setForeground(new Color(250,250,250));
+		iSalir.setBackground(new Color(0,0,0,100));
+		iSalir.setForeground(new Color(250,250,250));
+		iSalir.setBorder(BorderFactory.createEmptyBorder());
+		iSalir.setMaximumSize(new Dimension(400,70));
+		
+		iConfig.addActionListener(this);
+		iSalir.addActionListener(this);
+		
+		popMenu.add(iConfig);
+		//popMenu.addSeparator();
+		popMenu.add(iSalir);
+		//popMenu.addSeparator();
+		
+		
+		
 		
 		
 		
@@ -174,7 +202,7 @@ public class Ventana extends JFrame implements ActionListener, MouseListener{
 		JScrollPane sBarra = new JScrollPane(taNeto,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		sBarra.setBounds(205, 335, 250, 100);
 				
-		
+		bCalcular.setName("bCalcular");
 		bCalcular.setBounds(570, 340, 100, 40);
 		bCalcular.addActionListener(this);
 		
@@ -222,47 +250,62 @@ public class Ventana extends JFrame implements ActionListener, MouseListener{
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		/*
-		 * dominical 0.75
-		 * nocturno	 0.35
-		 * noct-Dominical 1.1
-		 * */
-		
-		if(tSalarioMes.getText().trim().isEmpty()) {
-			JOptionPane.showMessageDialog(lTotalRecargos, "Ingrese el valor del sueldo mensual");
-		}else if(tNocturnas.getText().trim().isEmpty()) {
-			tNocturnas.setText("0");
-		}else if(tDominicales.getText().trim().isEmpty()) {
-			tDominicales.setText("0");
-		}else if(tNocturnasDominicales.getText().trim().isEmpty()) {
-			tNocturnasDominicales.setText("0");
+		String nombre = ((JMenuItem) arg0.getSource()).getName();
+		System.out.println(nombre);
+		if(nombre.equals("iSalir")) {
+			System.exit(0);
 		}
-		double mensual = Double.parseDouble(tSalarioMes.getText());
-		double hora = mensual/2/15/8;
-		double dominical = (Double.parseDouble(tDominicales.getText())*hora*0.75);
-		double nocturno = (Double.parseDouble(tNocturnas.getText())*hora*0.35);
-		double quincenal = mensual/2 ;
-		double noctDominical = (Double.parseDouble(tNocturnasDominicales.getText())*hora*1.1);
-		double subtotal = dominical+nocturno+noctDominical+quincenal;
+		if(nombre.equals("iConfig")) {
+			
+		}else {
+			nombre = ((JButton) arg0.getSource()).getName();
+			System.out.println(nombre);
+		}
 		
-		tSueldoQuincenal.setText(Double.toString(quincenal));
-		tTotalRecargos.setText(Double.toString(dominical+nocturno+noctDominical));
-		tSubTotal.setText(Double.toString(subtotal));
-		
-		double salud = subtotal*0.04;
-		double pension = subtotal*0.04;
-		double subtotal2 = salud+pension;
-		
-		
-		tSalud.setText(Double.toString(salud));
-		tPesion.setText(Double.toString(pension));
-		tSubTotal2.setText(Double.toString(subtotal2));
-		
-		double neto =  subtotal - subtotal2;
-		
-		taNeto.append(Double.toString(neto)+"\n");
-		System.out.println("hora: " + hora);
-		
+		if(nombre.equals("bCalcular")) {
+			/*
+			 * dominical 0.75
+			 * nocturno	 0.35
+			 * noct-Dominical 1.1
+			 * */
+			
+			if(tSalarioMes.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(lTotalRecargos, "Ingrese el valor del sueldo mensual");
+			}else if(tNocturnas.getText().trim().isEmpty()) {
+				tNocturnas.setText("0");
+			}else if(tDominicales.getText().trim().isEmpty()) {
+				tDominicales.setText("0");
+			}else if(tNocturnasDominicales.getText().trim().isEmpty()) {
+				tNocturnasDominicales.setText("0");
+			}
+			double mensual = Double.parseDouble(tSalarioMes.getText());
+			double hora = mensual/2/15/8;
+			double dominical = (Double.parseDouble(tDominicales.getText())*hora*0.75);
+			double nocturno = (Double.parseDouble(tNocturnas.getText())*hora*0.35);
+			double quincenal = mensual/2 ;
+			double noctDominical = (Double.parseDouble(tNocturnasDominicales.getText())*hora*1.1);
+			double subtotal = dominical+nocturno+noctDominical+quincenal;
+			
+			tSueldoQuincenal.setText(Double.toString(quincenal));
+			tTotalRecargos.setText(Double.toString(dominical+nocturno+noctDominical));
+			tSubTotal.setText(Double.toString(subtotal));
+			
+			double salud = subtotal*0.04;
+			double pension = subtotal*0.04;
+			double subtotal2 = salud+pension;
+			
+			
+			tSalud.setText(Double.toString(salud));
+			tPesion.setText(Double.toString(pension));
+			tSubTotal2.setText(Double.toString(subtotal2));
+			
+			double neto =  subtotal - subtotal2;
+			
+			taNeto.append(Double.toString(neto)+"\n");
+			System.out.println("hora: " + hora);
+			
+			
+		}
 		
 	}
 
@@ -271,7 +314,7 @@ public class Ventana extends JFrame implements ActionListener, MouseListener{
 		String nombre = ((JLabel) e.getSource()).getName();
 		if(nombre.equals("menu")) {
 			System.out.println("menu");
-			popMenu.show(e.getComponent(), -20, 40);
+			popMenu.show(e.getComponent(), -160, 40);
 			
 			
 		}
